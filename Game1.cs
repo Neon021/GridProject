@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace GridProject
@@ -22,7 +23,7 @@ namespace GridProject
         private int _tileHeight;
         private int _tileWidth;
 
-        private MovingSprite _movingSprite;
+        private List<MovingSprite> _movingSprites = new();
 
         public Game1()
         {
@@ -50,7 +51,10 @@ namespace GridProject
             _tileHeight = _tileTexture.Height;
             _tileWidth = _tileTexture.Width;
 
-            _movingSprite = new(_contentManager.Load<Texture2D>(CharacterTexture), Vector2.Zero, 1f);
+            for (int i = 0; i < 10; i++)
+            {
+                _movingSprites.Add(new(_contentManager.Load<Texture2D>(CharacterTexture), new(0, (float)Math.Log10(20 * i)), (float)Math.Sqrt(i)));
+            }
         }
 
         protected override void Update(GameTime gameTime)
@@ -59,7 +63,7 @@ namespace GridProject
                 Exit();
 
             // TODO: Add your update logic here
-            _movingSprite.Update();
+            _movingSprites.ForEach(ms => ms.Update());
             base.Update(gameTime);
         }
 
@@ -81,7 +85,8 @@ namespace GridProject
                 }
             }
 
-            _spriteBatch.Draw(_movingSprite.Texture, _movingSprite.Rectangle, Color.White);
+            _movingSprites.ForEach(ms => _spriteBatch.Draw(ms.Texture, ms.Rectangle, Color.White));
+            
             _spriteBatch.End();
 
             base.Draw(gameTime);
