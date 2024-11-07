@@ -12,6 +12,7 @@ namespace GridProject
     {
         private readonly string TileTexture = "TileTexture";
         private readonly string CharacterTexture = "Character";
+        private readonly string TextureAtlas = "GrassTiles";
         private int ScreenHeight;
         private int ScreenWidth;
 
@@ -19,7 +20,10 @@ namespace GridProject
         private SpriteBatch _spriteBatch;
         private ContentManager _contentManager;
 
-        private Dictionary<Vector2, int> TileMap = new();
+        private readonly Dictionary<Vector2, int> TileMap = new();
+        private List<Rectangle> _textureStore;
+        private Texture2D _textureAtlas;
+
         private Texture2D _tileTexture;
         private int _tileHeight;
         private int _tileWidth;
@@ -30,11 +34,16 @@ namespace GridProject
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            LoadTileMap("Map.csv");
+            TileMap = LoadTileMap("Map.csv");
             IsMouseVisible = true;
+            _textureStore = new()
+            {
+                new(23, 103, 47, 17),
+                new(7, 15, 69, 79)
+            };
         }
 
-        private Dictionary<Vector2, int> LoadTileMap(string fileName)
+        private static Dictionary<Vector2, int> LoadTileMap(string fileName)
         {
             Dictionary<Vector2, int> res = new();
             StreamReader sr = new(fileName);
@@ -76,6 +85,8 @@ namespace GridProject
             _tileWidth = _tileTexture.Width;
 
             _movingSprite = new(_contentManager.Load<Texture2D>(CharacterTexture), Vector2.Zero, 5f);
+
+            _textureAtlas = _contentManager.Load<Texture2D>(TextureAtlas);
         }
 
         protected override void Update(GameTime gameTime)
@@ -98,15 +109,28 @@ namespace GridProject
 
             _spriteBatch.Begin();
 
-            for (int x = 0; x < numTilesX; x++)
-            {
-                for (int y = 0; y < numTilesY; y++)
-                {
-                    _spriteBatch.Draw(_tileTexture, new Vector2(x * _tileWidth, y * _tileHeight), Color.White);
-                }
-            }
+            //for (int x = 0; x < numTilesX; x++)
+            //{
+            //    for (int y = 0; y < numTilesY; y++)
+            //    {
+            //        _spriteBatch.Draw(_tileTexture, new Vector2(x * _tileWidth, y * _tileHeight), Color.White);
+            //    }
+            //}
 
-            _spriteBatch.Draw(_movingSprite.Texture, _movingSprite.Rectangle, Color.White);
+            //_spriteBatch.Draw(_movingSprite.Texture, _movingSprite.Rectangle, Color.White);
+
+            foreach (var kv in TileMap)
+            {
+                Rectangle dest = new(
+                    (int)kv.Key.X * 128,
+                    (int)kv.Key.Y * 128,
+                    128,
+                    128);
+
+                Rectangle src = _textureStore[kv.Value - 1];
+
+                _spriteBatch.Draw(_textureAtlas, dest, src, Color.White);
+            }
 
             _spriteBatch.End();
 
