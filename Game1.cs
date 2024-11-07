@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+using System.IO;
 
 namespace GridProject
 {
@@ -19,6 +19,7 @@ namespace GridProject
         private SpriteBatch _spriteBatch;
         private ContentManager _contentManager;
 
+        private Dictionary<Vector2, int> TileMap = new();
         private Texture2D _tileTexture;
         private int _tileHeight;
         private int _tileWidth;
@@ -29,7 +30,30 @@ namespace GridProject
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            LoadTileMap("Map.csv");
             IsMouseVisible = true;
+        }
+
+        private Dictionary<Vector2, int> LoadTileMap(string fileName)
+        {
+            Dictionary<Vector2, int> res = new();
+            StreamReader sr = new(fileName);
+
+            int y = 0;
+            string line;
+            while ((line = sr.ReadLine()) != null)
+            {
+                string[] values = line.Split(',');
+                for (int x = 0; x < values.Length; x++)
+                {
+                    if (values[x] != "0")
+                        res.Add(new(x, y), int.Parse(values[x]));
+                }
+
+                y++;
+            }
+
+            return res;
         }
 
         protected override void Initialize()
