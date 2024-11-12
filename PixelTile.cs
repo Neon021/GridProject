@@ -8,7 +8,7 @@ namespace GridProject
     {
         public PixelTile(Dictionary<Vector2, int> tileMap) : base(tileMap)
         {
-            displaySize = 28;
+            displaySize = 64;
             tilePerRow = 64;
             pixelTileSize = 8;
 

@@ -12,6 +12,7 @@ namespace GridProject
     {
         private int ScreenHeight;
         private int ScreenWidth;
+        private readonly int TILESIZE = 64;
 
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
@@ -25,7 +26,6 @@ namespace GridProject
         private readonly Dictionary<Vector2, int> _collisionsTiles;
         private Texture2D _textureAtlas;
 
-        private int TILESIZE = 64;
 
         private Sprite _player;
         private Texture2D _rectangleTexture;
@@ -33,7 +33,12 @@ namespace GridProject
         private List<Rectangle> _intersections;
         public Game1()
         {
-            _graphics = new GraphicsDeviceManager(this);
+            _graphics = new GraphicsDeviceManager(this)
+            {
+                PreferredBackBufferWidth = 1920,
+                PreferredBackBufferHeight = 1080,
+                SynchronizeWithVerticalRetrace = true,
+            };
             Content.RootDirectory = "Content";
             _fgTiles = LoadTileMap("Data/level1_fg.csv");
             _mgTiles = LoadTileMap("Data/level1_mg.csv");
