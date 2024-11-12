@@ -83,6 +83,34 @@ namespace GridProject
             GraphicsDevice.Clear(Color.Black);
 
             _spriteBatch.Begin();
+
+            int displaySize = 28;
+            int tilePerRow = 64;
+            int pixelTileSize = 8;
+
+            foreach (var item in mg)
+            {
+                Rectangle dRect = new(
+                    (int)item.Key.X * displaySize,
+                    (int)item.Key.Y * displaySize,
+                    displaySize,
+                    displaySize
+                );
+
+                //Because the Value in KV is the actual ID of the tile in the atlas
+                int x = item.Value % tilePerRow;
+                int y = item.Value / tilePerRow;
+
+                Rectangle src = new(
+                    x * pixelTileSize,
+                    y * pixelTileSize,
+                    pixelTileSize,
+                    pixelTileSize
+               );
+
+                _spriteBatch.Draw(_textureAtlas, dRect, src, Color.White);
+            }
+
             _spriteBatch.End();
 
             base.Draw(gameTime);
