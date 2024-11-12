@@ -10,8 +10,6 @@ namespace GridProject
 {
     public class Game1 : Game
     {
-        private int ScreenHeight;
-        private int ScreenWidth;
         private readonly int TILESIZE = 64;
 
         private GraphicsDeviceManager _graphics;
@@ -72,8 +70,6 @@ namespace GridProject
         {
             // TODO: Add your initialization logic here
             _contentManager = Content;
-            ScreenHeight = GraphicsDevice.Viewport.Height;
-            ScreenWidth = GraphicsDevice.Viewport.Width;
 
             _mg = new(_mgTiles);
             _fg = new(_fgTiles);
