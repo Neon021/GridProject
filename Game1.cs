@@ -17,17 +17,21 @@ namespace GridProject
         private SpriteBatch _spriteBatch;
         private ContentManager _contentManager;
 
-        private readonly Dictionary<Vector2, int> fg;
-        private readonly Dictionary<Vector2, int> mg;
-        private readonly Dictionary<Vector2, int> collisions;
+        private PixelTile fg;
+        private readonly Dictionary<Vector2, int> fgTiles;
+        private PixelTile mg;
+        private readonly Dictionary<Vector2, int> mgTiles;
+        private PixelTile collisions;
+        private readonly Dictionary<Vector2, int> collisionsTiles;
+
         private Texture2D _textureAtlas;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            fg = LoadTileMap("Data/level1_fg.csv");
-            mg = LoadTileMap("Data/level1_mg.csv");
-            collisions = LoadTileMap("Data/level1_collisions.csv");
+            fgTiles = LoadTileMap("Data/level1_fg.csv");
+            mgTiles = LoadTileMap("Data/level1_mg.csv");
+            collisionsTiles = LoadTileMap("Data/level1_collisions.csv");
             IsMouseVisible = true;
         }
 
@@ -60,6 +64,10 @@ namespace GridProject
             ScreenHeight = GraphicsDevice.Viewport.Height;
             ScreenWidth = GraphicsDevice.Viewport.Width;
 
+            mg = new(mgTiles);
+            fg = new(fgTiles);
+            collisions = new(collisionsTiles);
+
             base.Initialize();
         }
 
@@ -84,32 +92,11 @@ namespace GridProject
 
             _spriteBatch.Begin();
 
-            int displaySize = 28;
-            int tilePerRow = 64;
-            int pixelTileSize = 8;
+            mg.Draw(_spriteBatch, _textureAtlas);
+            fg.Draw(_spriteBatch, _textureAtlas);
+            collisions.Draw(_spriteBatch, _textureAtlas);
+            
 
-            foreach (var item in mg)
-            {
-                Rectangle dRect = new(
-                    (int)item.Key.X * displaySize,
-                    (int)item.Key.Y * displaySize,
-                    displaySize,
-                    displaySize
-                );
-
-                //Because the Value in KV is the actual ID of the tile in the atlas
-                int x = item.Value % tilePerRow;
-                int y = item.Value / tilePerRow;
-
-                Rectangle src = new(
-                    x * pixelTileSize,
-                    y * pixelTileSize,
-                    pixelTileSize,
-                    pixelTileSize
-               );
-
-                _spriteBatch.Draw(_textureAtlas, dRect, src, Color.White);
-            }
 
             _spriteBatch.End();
 
