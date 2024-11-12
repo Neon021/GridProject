@@ -102,6 +102,64 @@ namespace GridProject
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             _player.Update(Keyboard.GetState());
+
+            // add _player's velocity and grab the intersecting tiles
+            _player.Rect.X += (int)_player.Velocity.X;
+            _intersections = GetIntersectingTilesHorizontally(_player.Rect);
+
+            foreach (var rect in _intersections)
+            {
+                // handle collisions if the tile position exists in the tile map layer.
+                if (_collisionsTiles.TryGetValue(new Vector2(rect.X, rect.Y), out _))
+                {
+                    // create temp rect to handle collisions (not necessary, you can optimize!)
+                    Rectangle collision = new(
+                        rect.X * TILESIZE,
+                        rect.Y * TILESIZE,
+                        TILESIZE,
+                        TILESIZE
+                    );
+
+                    // handle collisions based on the direction the _player is moving
+                    if (_player.Velocity.X > 0.0f)
+                    {
+                        _player.Rect.X = collision.Left - _player.Rect.Width;
+                    }
+                    else if (_player.Velocity.X < 0.0f)
+                    {
+                        _player.Rect.X = collision.Right;
+                    }
+                }
+            }
+
+            // same as horizontal collisions
+            _player.Rect.Y += (int)_player.Velocity.Y;
+            _intersections = GetIntersectingTilesVertically(_player.Rect);
+
+            foreach (var rect in _intersections)
+            {
+                if (_collisionsTiles.TryGetValue(new Vector2(rect.X, rect.Y), out _))
+                {
+
+                    Rectangle collision = new(
+                        rect.X * TILESIZE,
+                        rect.Y * TILESIZE,
+                        TILESIZE,
+                        TILESIZE
+                    );
+
+                    if (_player.Velocity.Y > 0.0f)
+                    {
+                        _player.Rect.Y = collision.Top - _player.Rect.Height;
+                    }
+                    else if (_player.Velocity.Y < 0.0f)
+                    {
+                        _player.Rect.Y = collision.Bottom;
+                    }
+
+                }
+            }
+
             base.Update(gameTime);
         }
 
