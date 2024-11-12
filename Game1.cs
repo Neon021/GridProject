@@ -114,7 +114,21 @@ namespace GridProject
             _mg.Draw(_spriteBatch, _textureAtlas);
             _fg.Draw(_spriteBatch, _textureAtlas);
 
+            foreach (var rect in _intersections)
+            {
+                DrawRectHollow(
+                    _spriteBatch,
+                    new Rectangle(
+                        rect.X * TILESIZE,
+                        rect.Y * TILESIZE,
+                        TILESIZE,
+                        TILESIZE
+                    ),
+                    4
+                );
+            }
             _player.Draw(_spriteBatch);
+            DrawRectHollow(_spriteBatch, _player.Rect, 4);
 
             _spriteBatch.End();
 
