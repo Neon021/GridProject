@@ -78,6 +78,7 @@ namespace GridProject
             _mg = new(_mgTiles);
             _fg = new(_fgTiles);
             _collisions = new(_collisionsTiles);
+            _intersections = new();
 
             base.Initialize();
         }
@@ -92,9 +93,8 @@ namespace GridProject
             _rectangleTexture.SetData(new Color[] { new(255, 0, 0, 255) });
             _player = new Sprite(
                     Content.Load<Texture2D>("player_static"),
-                    new Rectangle(28, 28, 28, 28 * 2),
-                    new Rectangle(0, 0, 8, 16)
-);
+                    new Rectangle(TILESIZE, TILESIZE, TILESIZE, TILESIZE * 2),
+                    new Rectangle(0, 0, 8, 16));
         }
 
         protected override void Update(GameTime gameTime)
@@ -121,6 +121,50 @@ namespace GridProject
             base.Draw(gameTime);
         }
 
+        public List<Rectangle> GetIntersectingTilesHorizontally(Rectangle target)
+        {
+            List<Rectangle> intersections = new();
+
+            int widthInTiles = (target.Width - (target.Width % TILESIZE)) / TILESIZE;
+            int heightInTiles = (target.Height - (target.Height % TILESIZE)) / TILESIZE;
+
+            for (int x = 0; x < widthInTiles; x++)
+            {
+                for (int y = 0; y < heightInTiles; y++)
+                {
+                    intersections.Add(new(
+                        (target.X + x * TILESIZE) / TILESIZE,
+                        (target.Y + y * (TILESIZE - 1)) / TILESIZE,
+                        TILESIZE,
+                        TILESIZE
+                        ));
+                }
+            }
+
+            return intersections;
+        }
+        public List<Rectangle> GetIntersectingTilesVertically(Rectangle target)
+        {
+            List<Rectangle> intersections = new();
+
+            int widthInTiles = (target.Width - (target.Width % TILESIZE)) / TILESIZE;
+            int heightInTiles = (target.Height - (target.Height % TILESIZE)) / TILESIZE;
+
+            for (int x = 0; x < widthInTiles; x++)
+            {
+                for (int y = 0; y < heightInTiles; y++)
+                {
+                    intersections.Add(new(
+                        (target.X + x * (TILESIZE - 1)) / TILESIZE,
+                        (target.Y + y * TILESIZE) / TILESIZE,
+                        TILESIZE,
+                        TILESIZE
+                        ));
+                }
+            }
+
+            return intersections;
+        }
         public void DrawRectHollow(SpriteBatch spriteBatch, Rectangle rect, int thickness)
         {
             spriteBatch.Draw(
