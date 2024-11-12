@@ -23,10 +23,10 @@ namespace GridProject
         private readonly Dictionary<Vector2, int> mgTiles;
         private PixelTile collisions;
         private readonly Dictionary<Vector2, int> collisionsTiles;
-
         private Texture2D _textureAtlas;
 
         private Sprite Player;
+        private Texture2D rectangleTexture;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -78,6 +78,9 @@ namespace GridProject
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             _textureAtlas = Content.Load<Texture2D>("Textures-16");
+
+            rectangleTexture = new Texture2D(GraphicsDevice, 1, 1);
+            rectangleTexture.SetData(new Color[] { new(255, 0, 0, 255) });
             Player = new Sprite(
                     Content.Load<Texture2D>("player_static"),
                     new Rectangle(28, 28, 28, 28 * 2),
@@ -102,9 +105,55 @@ namespace GridProject
             mg.Draw(_spriteBatch, _textureAtlas);
             fg.Draw(_spriteBatch, _textureAtlas);
 
+            Player.Draw(_spriteBatch);
+
             _spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        public void DrawRectHollow(SpriteBatch spriteBatch, Rectangle rect, int thickness)
+        {
+            spriteBatch.Draw(
+                rectangleTexture,
+                new Rectangle(
+                    rect.X,
+                    rect.Y,
+                    rect.Width,
+                    thickness
+                ),
+                Color.White
+            );
+            spriteBatch.Draw(
+                rectangleTexture,
+                new Rectangle(
+                    rect.X,
+                    rect.Bottom - thickness,
+                    rect.Width,
+                    thickness
+                ),
+                Color.White
+            );
+            spriteBatch.Draw(
+                rectangleTexture,
+                new Rectangle(
+                    rect.X,
+                    rect.Y,
+                    thickness,
+                    rect.Height
+                ),
+                Color.White
+            );
+            spriteBatch.Draw(
+                rectangleTexture,
+                new Rectangle(
+                    rect.Right - thickness,
+                    rect.Y,
+                    thickness,
+                    rect.Height
+                ),
+                Color.White
+            );
         }
     }
 }
