@@ -25,6 +25,8 @@ namespace GridProject
         private readonly Dictionary<Vector2, int> collisionsTiles;
 
         private Texture2D _textureAtlas;
+
+        private Sprite Player;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -76,6 +78,11 @@ namespace GridProject
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             _textureAtlas = Content.Load<Texture2D>("Textures-16");
+            Player = new Sprite(
+                    Content.Load<Texture2D>("player_static"),
+                    new Rectangle(28, 28, 28, 28 * 2),
+                    new Rectangle(0, 0, 8, 16)
+);
         }
 
         protected override void Update(GameTime gameTime)
@@ -94,9 +101,6 @@ namespace GridProject
 
             mg.Draw(_spriteBatch, _textureAtlas);
             fg.Draw(_spriteBatch, _textureAtlas);
-            collisions.Draw(_spriteBatch, _textureAtlas);
-            
-
 
             _spriteBatch.End();
 
