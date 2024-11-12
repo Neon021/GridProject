@@ -17,23 +17,27 @@ namespace GridProject
         private SpriteBatch _spriteBatch;
         private ContentManager _contentManager;
 
-        private PixelTile fg;
-        private readonly Dictionary<Vector2, int> fgTiles;
-        private PixelTile mg;
-        private readonly Dictionary<Vector2, int> mgTiles;
-        private PixelTile collisions;
-        private readonly Dictionary<Vector2, int> collisionsTiles;
+        private PixelTile _fg;
+        private readonly Dictionary<Vector2, int> _fgTiles;
+        private PixelTile _mg;
+        private readonly Dictionary<Vector2, int> _mgTiles;
+        private PixelTile _collisions;
+        private readonly Dictionary<Vector2, int> _collisionsTiles;
         private Texture2D _textureAtlas;
 
-        private Sprite Player;
-        private Texture2D rectangleTexture;
+        private int TILESIZE = 64;
+
+        private Sprite _player;
+        private Texture2D _rectangleTexture;
+
+        private List<Rectangle> _intersections;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            fgTiles = LoadTileMap("Data/level1_fg.csv");
-            mgTiles = LoadTileMap("Data/level1_mg.csv");
-            collisionsTiles = LoadTileMap("Data/level1_collisions.csv");
+            _fgTiles = LoadTileMap("Data/level1_fg.csv");
+            _mgTiles = LoadTileMap("Data/level1_mg.csv");
+            _collisionsTiles = LoadTileMap("Data/level1_collisions.csv");
             IsMouseVisible = true;
         }
 
@@ -66,9 +70,9 @@ namespace GridProject
             ScreenHeight = GraphicsDevice.Viewport.Height;
             ScreenWidth = GraphicsDevice.Viewport.Width;
 
-            mg = new(mgTiles);
-            fg = new(fgTiles);
-            collisions = new(collisionsTiles);
+            _mg = new(_mgTiles);
+            _fg = new(_fgTiles);
+            _collisions = new(_collisionsTiles);
 
             base.Initialize();
         }
@@ -79,9 +83,9 @@ namespace GridProject
 
             _textureAtlas = Content.Load<Texture2D>("Textures-16");
 
-            rectangleTexture = new Texture2D(GraphicsDevice, 1, 1);
-            rectangleTexture.SetData(new Color[] { new(255, 0, 0, 255) });
-            Player = new Sprite(
+            _rectangleTexture = new Texture2D(GraphicsDevice, 1, 1);
+            _rectangleTexture.SetData(new Color[] { new(255, 0, 0, 255) });
+            _player = new Sprite(
                     Content.Load<Texture2D>("player_static"),
                     new Rectangle(28, 28, 28, 28 * 2),
                     new Rectangle(0, 0, 8, 16)
@@ -92,7 +96,7 @@ namespace GridProject
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
+            _player.Update(Keyboard.GetState());
             base.Update(gameTime);
         }
 
@@ -102,10 +106,10 @@ namespace GridProject
 
             _spriteBatch.Begin();
 
-            mg.Draw(_spriteBatch, _textureAtlas);
-            fg.Draw(_spriteBatch, _textureAtlas);
+            _mg.Draw(_spriteBatch, _textureAtlas);
+            _fg.Draw(_spriteBatch, _textureAtlas);
 
-            Player.Draw(_spriteBatch);
+            _player.Draw(_spriteBatch);
 
             _spriteBatch.End();
 
@@ -115,7 +119,7 @@ namespace GridProject
         public void DrawRectHollow(SpriteBatch spriteBatch, Rectangle rect, int thickness)
         {
             spriteBatch.Draw(
-                rectangleTexture,
+                _rectangleTexture,
                 new Rectangle(
                     rect.X,
                     rect.Y,
@@ -125,7 +129,7 @@ namespace GridProject
                 Color.White
             );
             spriteBatch.Draw(
-                rectangleTexture,
+                _rectangleTexture,
                 new Rectangle(
                     rect.X,
                     rect.Bottom - thickness,
@@ -135,7 +139,7 @@ namespace GridProject
                 Color.White
             );
             spriteBatch.Draw(
-                rectangleTexture,
+                _rectangleTexture,
                 new Rectangle(
                     rect.X,
                     rect.Y,
@@ -145,7 +149,7 @@ namespace GridProject
                 Color.White
             );
             spriteBatch.Draw(
-                rectangleTexture,
+                _rectangleTexture,
                 new Rectangle(
                     rect.Right - thickness,
                     rect.Y,
