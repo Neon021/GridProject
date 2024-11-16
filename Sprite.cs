@@ -37,28 +37,29 @@ namespace GridProject
 
         public void Update(KeyboardState keystate, KeyboardState prevKeyState, GameTime gameTime)
         {
+            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds * 75;
             prevDirection = Direction;
 
-            Velocity.X = 0;
+            //Velocity.X = 0;
 
-            Velocity.Y += 0.3f;
+            Velocity.Y += 0.3f * dt;
             Velocity.Y = Math.Min(25.0f, Velocity.Y);
 
 
             if (keystate.IsKeyDown(Keys.Right))
             {
-                Velocity.X = 5;
+                Velocity.X += 0.5f * dt;
                 Direction = Direction.Right;
             }
             if (keystate.IsKeyDown(Keys.Left))
             {
-                Velocity.X = -5;
+                Velocity.X += -0.5f * dt;
                 Direction = Direction.Left;
             }
 
             if (JumpCounter < numOfJumps && keystate.IsKeyDown(Keys.Space) && !prevKeyState.IsKeyDown(Keys.Space))
             {
-                Velocity.Y = -10;
+                Velocity.Y = -10 * dt;
                 JumpCounter++;
             }
 

@@ -122,6 +122,9 @@ namespace GridProject
                         TILESIZE
                     );
 
+                    if (!_player.Rect.Intersects(collision))
+                        continue;
+
                     // handle collisions based on the direction the _player is moving
                     if (_player.Velocity.X > 0.0f)
                     {
@@ -152,6 +155,9 @@ namespace GridProject
                         TILESIZE,
                         TILESIZE
                     );
+
+                    if (!_player.Rect.Intersects(collision))
+                        continue;
 
                     if (_player.Velocity.Y > 0.0f)
                     {
