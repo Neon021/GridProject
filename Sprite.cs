@@ -57,6 +57,9 @@ namespace GridProject
                 Direction = Direction.Left;
             }
 
+            Velocity.X = Math.Max(-300, Math.Min(300, Velocity.X));
+            Velocity.X *= 0.95f;
+
             if (JumpCounter < numOfJumps && keystate.IsKeyDown(Keys.Space) && !prevKeyState.IsKeyDown(Keys.Space))
             {
                 Velocity.Y = -10 * dt;
