@@ -27,7 +27,6 @@ namespace GridProject
         public void Update(KeyboardState keystate)
         {
             Velocity = Vector2.Zero;
-            Velocity.Y = 5.0f;
 
             if (keystate.IsKeyDown(Keys.Right))
             {

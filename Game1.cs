@@ -196,9 +196,9 @@ namespace GridProject
             int widthInTiles = (target.Width - (target.Width % TILESIZE)) / TILESIZE;
             int heightInTiles = (target.Height - (target.Height % TILESIZE)) / TILESIZE;
 
-            for (int x = 0; x < widthInTiles; x++)
+            for (int x = 0; x <= widthInTiles; x++)
             {
-                for (int y = 0; y < heightInTiles; y++)
+                for (int y = 0; y <= heightInTiles; y++)
                 {
                     intersections.Add(new(
                         (target.X + x * TILESIZE) / TILESIZE,
@@ -218,9 +218,9 @@ namespace GridProject
             int widthInTiles = (target.Width - (target.Width % TILESIZE)) / TILESIZE;
             int heightInTiles = (target.Height - (target.Height % TILESIZE)) / TILESIZE;
 
-            for (int x = 0; x < widthInTiles; x++)
+            for (int x = 0; x <= widthInTiles; x++)
             {
-                for (int y = 0; y < heightInTiles; y++)
+                for (int y = 0; y <= heightInTiles; y++)
                 {
                     intersections.Add(new(
                         (target.X + x * (TILESIZE - 1)) / TILESIZE,
