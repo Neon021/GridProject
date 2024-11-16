@@ -14,6 +14,7 @@ namespace GridProject
         public Vector2 Velocity;
 
         public bool Grounded { get; set; }
+        public Direction Direction { get; set; }
         public Sprite(
             Texture2D texture,
             Rectangle rect,
@@ -58,4 +59,6 @@ namespace GridProject
             );
         }
     }
+
+    enum Direction { Left = -1, Right = 1, }
 }
