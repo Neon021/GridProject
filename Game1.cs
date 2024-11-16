@@ -169,6 +169,9 @@ namespace GridProject
             }
             #endregion
 
+            if (!_player.Grounded && _player.JumpCounter == 0)
+                _player.JumpCounter++;
+
             base.Update(gameTime);
         }
 
