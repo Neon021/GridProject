@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace GridProject
 {
@@ -24,9 +25,12 @@ namespace GridProject
             Velocity = new();
         }
 
-        public void Update(KeyboardState keystate)
+        public void Update(KeyboardState keystate, KeyboardState prevKeyState, GameTime gameTime)
         {
-            Velocity = Vector2.Zero;
+            Velocity.X = 0;
+
+            Velocity.Y += 0.3f;
+            Velocity.Y = Math.Min(25.0f, Velocity.Y);
 
             if (keystate.IsKeyDown(Keys.Right))
             {
