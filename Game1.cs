@@ -158,6 +158,7 @@ namespace GridProject
                         _player.Rect.Y = collision.Top - _player.Rect.Height;
                         _player.Velocity.Y = 1.0f;
                         _player.Grounded = true;
+                        _player.JumpCounter = 0;
                     }
                     else if (_player.Velocity.Y < 0.0f)
                     {

@@ -17,6 +17,8 @@ namespace GridProject
         public Direction Direction { get; set; }
         public Direction prevDirection;
 
+        private int numOfJumps = 2;
+        public int JumpCounter { get; set; }
         public Sprite(
             Texture2D texture,
             Rectangle rect,
@@ -54,8 +56,11 @@ namespace GridProject
                 Direction = Direction.Left;
             }
 
-            if (Grounded && keystate.IsKeyDown(Keys.Space) && !prevKeyState.IsKeyDown(Keys.Space))
+            if (JumpCounter < numOfJumps && keystate.IsKeyDown(Keys.Space) && !prevKeyState.IsKeyDown(Keys.Space))
+            {
                 Velocity.Y = -10;
+                JumpCounter++;
+            }
 
             //Should it be in update or draw?
             if (prevDirection != Direction)
