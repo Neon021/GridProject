@@ -15,6 +15,8 @@ namespace GridProject
 
         public bool Grounded { get; set; }
         public Direction Direction { get; set; }
+        public Direction prevDirection;
+
         public Sprite(
             Texture2D texture,
             Rectangle rect,
@@ -24,29 +26,43 @@ namespace GridProject
             Texture = texture;
             Rect = rect;
             Srect = srect;
+
+            Direction = Direction.Left;
             Grounded = false;
+
             Velocity = new();
         }
 
         public void Update(KeyboardState keystate, KeyboardState prevKeyState, GameTime gameTime)
         {
+            prevDirection = Direction;
+
             Velocity.X = 0;
 
             Velocity.Y += 0.3f;
             Velocity.Y = Math.Min(25.0f, Velocity.Y);
 
+
             if (keystate.IsKeyDown(Keys.Right))
             {
                 Velocity.X = 5;
+                Direction = Direction.Right;
             }
             if (keystate.IsKeyDown(Keys.Left))
             {
                 Velocity.X = -5;
+                Direction = Direction.Left;
             }
 
             if (Grounded && keystate.IsKeyDown(Keys.Space) && !prevKeyState.IsKeyDown(Keys.Space))
                 Velocity.Y = -10;
-            //Velocity.Y += -8;
+
+            //Should it be in update or draw?
+            if (prevDirection != Direction)
+            {
+                Srect.X += Srect.Width;
+                Srect.Width = -Srect.Width;
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -60,5 +76,5 @@ namespace GridProject
         }
     }
 
-    enum Direction { Left = -1, Right = 1, }
+    public enum Direction { Left = -1, Right = 1, }
 }
