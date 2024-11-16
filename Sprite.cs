@@ -13,6 +13,7 @@ namespace GridProject
         public Rectangle Srect;
         public Vector2 Velocity;
 
+        public bool Grounded { get; set; }
         public Sprite(
             Texture2D texture,
             Rectangle rect,
@@ -22,6 +23,7 @@ namespace GridProject
             Texture = texture;
             Rect = rect;
             Srect = srect;
+            Grounded = false;
             Velocity = new();
         }
 
@@ -40,14 +42,10 @@ namespace GridProject
             {
                 Velocity.X = -5;
             }
-            if (keystate.IsKeyDown(Keys.Up))
-            {
-                Velocity.Y = -5;
-            }
-            if (keystate.IsKeyDown(Keys.Down))
-            {
-                Velocity.Y = 5;
-            }
+
+            if (Grounded && keystate.IsKeyDown(Keys.Space) && !prevKeyState.IsKeyDown(Keys.Space))
+                Velocity.Y = -10;
+            //Velocity.Y += -8;
         }
 
         public void Draw(SpriteBatch spriteBatch)

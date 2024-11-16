@@ -29,6 +29,8 @@ namespace GridProject
         private Texture2D _rectangleTexture;
 
         private List<Rectangle> _intersections;
+
+        private KeyboardState prevKeyboradState;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this)
@@ -89,7 +91,7 @@ namespace GridProject
             _rectangleTexture.SetData(new Color[] { new(255, 0, 0, 255) });
             _player = new Sprite(
                     Content.Load<Texture2D>("player_static"),
-                    new Rectangle(TILESIZE, TILESIZE, TILESIZE, TILESIZE * 2),
+                    new Rectangle(TILESIZE * 5, TILESIZE, TILESIZE, TILESIZE * 2),
                     new Rectangle(0, 0, 8, 16));
         }
 
@@ -97,8 +99,12 @@ namespace GridProject
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            _player.Update(Keyboard.GetState());
 
+            _player.Update(Keyboard.GetState(), prevKeyboradState, gameTime);
+
+            prevKeyboradState = Keyboard.GetState();
+
+            #region HorizontalCollision
             // add _player's velocity and grab the intersecting tiles
             _player.Rect.X += (int)_player.Velocity.X;
             _intersections = GetIntersectingTilesHorizontally(_player.Rect);
@@ -127,10 +133,13 @@ namespace GridProject
                     }
                 }
             }
+            #endregion
 
-            // same as horizontal collisions
+            #region VerticalCollisions
             _player.Rect.Y += (int)_player.Velocity.Y;
             _intersections = GetIntersectingTilesVertically(_player.Rect);
+
+            _player.Grounded = false;
 
             foreach (var rect in _intersections)
             {
@@ -147,6 +156,8 @@ namespace GridProject
                     if (_player.Velocity.Y > 0.0f)
                     {
                         _player.Rect.Y = collision.Top - _player.Rect.Height;
+                        _player.Velocity.Y = 1.0f;
+                        _player.Grounded = true;
                     }
                     else if (_player.Velocity.Y < 0.0f)
                     {
@@ -155,6 +166,7 @@ namespace GridProject
 
                 }
             }
+            #endregion
 
             base.Update(gameTime);
         }
